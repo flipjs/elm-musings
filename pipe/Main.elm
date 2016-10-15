@@ -4,12 +4,24 @@ import Html exposing (text)
 
 
 main =
-    text (toString result)
+    result |> strcat "Result is " |> text
 
 
 add a b =
     a + b
 
 
+num =
+    1
+
+
 result =
-    1 |> add 2 |> add 3
+    num
+        |> add 2
+        |> add 3
+        |> add 4
+        |> toString
+
+
+strcat a b =
+    a ++ b
