@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
 
+main : Program Never
 main =
     App.beginnerProgram { model = model, view = view, update = update }
 
