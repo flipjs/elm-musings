@@ -7,6 +7,7 @@ import Html.Events exposing (onClick, onInput)
 import String exposing (toInt)
 
 
+main : Program Never
 main =
     App.beginnerProgram
         { model = model
