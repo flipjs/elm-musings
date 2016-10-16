@@ -1,8 +1,10 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, button)
+import Html exposing (Html, h3, text, div, button, input)
 import Html.App as App
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (type', value, style)
+import Html.Events exposing (onClick, onInput)
+import String exposing (toInt)
 
 
 main =
@@ -14,33 +16,67 @@ main =
 
 
 type alias Model =
-    Int
+    { coins : Int
+    , input : Int
+    , error : Maybe String
+    }
 
 
 model : Model
 model =
-    0
+    Model 0 0 Nothing
 
 
 type Msg
-    = AddCoin
+    = AddCoins
+    | Input String
     | Clear
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        AddCoin ->
-            model + 1
+        AddCoins ->
+            { model
+                | coins = model.coins + model.input
+                , input = 0
+            }
+
+        Input val ->
+            case toInt val of
+                Ok input ->
+                    { model
+                        | input = input
+                        , error = Nothing
+                    }
+
+                Err err ->
+                    { model
+                        | input = 0
+                        , error = Just err
+                    }
 
         Clear ->
-            0
+            Model 0 0 Nothing
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ div [] [ text ("Piggy Bank: " ++ (toString model) ++ " coins") ]
-        , button [ onClick AddCoin ] [ text "Add coin" ]
+        [ h3 [] [ text ("Piggy Bank: " ++ (toString model.coins) ++ " coins") ]
+        , input
+            [ type' "text"
+            , onInput Input
+            , value
+                (if model.input == 0 then
+                    ""
+                 else
+                    toString model.input
+                )
+            ]
+            []
+        , div [] [ text (Maybe.withDefault "" model.error) ]
+        , button [ type' "button", onClick AddCoins ] [ text "Add coins" ]
         , button [ onClick Clear ] [ text "Clear" ]
+        , div [] [ text (toString model) ]
         ]
